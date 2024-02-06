@@ -5,6 +5,8 @@ import com.mandacarubroker.domain.stock.*;
 import com.mandacarubroker.service.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -26,13 +28,14 @@ public class StockController {
 
     @GetMapping("/{id}")
     public Stock getStockById(@PathVariable String id) {
-        return stockService.getStockById(id).orElse(null);
+        return stockService.getStockById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Stock not found"));
     }
 
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestBody RequestStockDTO data) {
         Stock createdStock = stockService.createStock(data);
-        return ResponseEntity.ok(createdStock);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 
     @PutMapping("/{id}")
@@ -41,8 +44,13 @@ public class StockController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStock(@PathVariable String id) {
+    public ResponseEntity<Void> deleteStockById(@PathVariable String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         stockService.deleteStock(id);
+        return ResponseEntity.ok().build();
     }
 
 }
