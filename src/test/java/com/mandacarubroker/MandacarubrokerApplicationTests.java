@@ -49,4 +49,10 @@ class MandacarubrokerApplicationTests {
 		mockMvc.perform(MockMvcRequestBuilders.delete("/stocks/{id}", 1))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@Test
+	void testDeleteAllStocks() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.delete("/stocks"))
+				.andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
+	}
 }
