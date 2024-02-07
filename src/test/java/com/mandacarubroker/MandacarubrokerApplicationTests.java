@@ -1,5 +1,6 @@
 package com.mandacarubroker;
 
+import jakarta.validation.constraints.Null;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,6 +43,15 @@ class MandacarubrokerApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{ \"companyName\": \"Test Stock\", \"symbol\": \"TST4\", \"price\":  45}"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void shouldNotUpdateStockByInexistintId() throws Exception {
+		// Perform a PUT request with a non-existent ID
+		mockMvc.perform(MockMvcRequestBuilders.put("/stocks/{id}", "")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{ \"name\": \"Updated Stock\", \"symbol\": \"UPD\" }"))
+						.andExpect(MockMvcResultMatchers.status().isNotFound());
 	}
 
 	@Test
