@@ -107,11 +107,7 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
-        <module name="Checker">
-            <module name="TreeWalker">
-                <module name="AbbreviationAsWordInName"/>
-            </module>
-        </module>
+        <module name="AbbreviationAsWordInName"/>
 
         <!-- Checks for imports                              -->
         <!-- See https://checkstyle.org/checks/imports/index.html -->
