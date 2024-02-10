@@ -33,7 +33,7 @@ class MandacarubrokerApplicationTests {
 	void shouldCreateStock() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/stocks")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content("{ \"companyName\": \"Test Stock\", \"symbol\": \"TST4\", \"price\":  45.2}"))
+						.content("{ \"companyName\": \"Test Stock\", \"symbol\": \"SANB4\", \"price\":  45.2}"))
 				.andExpect(MockMvcResultMatchers.status().isCreated());
 	}
 
@@ -46,7 +46,7 @@ class MandacarubrokerApplicationTests {
 	}
 
 	@Test
-	void shouldNotUpdateStockByInexistintId() throws Exception {
+	void shouldNotUpdateStockByInexistentId() throws Exception {
 		// Perform a PUT request with a non-existent ID
 		mockMvc.perform(MockMvcRequestBuilders.put("/stocks/{id}", "")
 						.contentType(MediaType.APPLICATION_JSON)
