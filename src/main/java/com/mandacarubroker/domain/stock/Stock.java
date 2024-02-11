@@ -1,5 +1,7 @@
 package com.mandacarubroker.domain.stock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,6 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Stock {
+    /**
+     * The StockService used by this controller to perform operations on stocks.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Stock.class);
 
     /**
      * Unique identifier for the stock.
@@ -49,7 +55,6 @@ public class Stock {
     public Stock(final RequestStockDTO requestStockDTO) {
         this.symbol = requestStockDTO.symbol();
         this.companyName = requestStockDTO.companyName();
-        this.price = 0;
         this.price = changePrice(requestStockDTO.price(), true);
     }
 
@@ -60,11 +65,15 @@ public class Stock {
      * @return The new stock price.
      */
     public double changePrice(final double amount, final boolean increase) {
+        logger.info("Changing price for stock: {}", this.symbol);
+        double newPrice;
         if (increase) {
-            return increasePrice(amount);
+            newPrice = increasePrice(amount);
         } else {
-            return decreasePrice(amount);
+            newPrice = decreasePrice(amount);
         }
+        logger.info("New price for stock {}: {}", this.symbol, newPrice);
+        return newPrice;
     }
 
     /**
@@ -73,6 +82,7 @@ public class Stock {
      * @return The new stock price after the increase.
      */
     public double increasePrice(final double amount) {
+        logger.info("Increasing price for stock: {} by {}", this.symbol, amount);
         return this.price + amount;
     }
 
@@ -82,6 +92,12 @@ public class Stock {
      * @return The new stock price after the decrease.
      */
     public double decreasePrice(final double amount) {
-        return this.price - amount;
+        logger.info("Decreasing price for stock: {} by {}", this.symbol, amount);
+        double newPrice = this.price - amount;
+        if (newPrice < 0) {
+            logger.error("Invalid operation: Decreasing price resulted in negative price for stock: {}", this.symbol);
+            throw new IllegalStateException("Price cannot be negative");
+        }
+        return newPrice;
     }
 }
