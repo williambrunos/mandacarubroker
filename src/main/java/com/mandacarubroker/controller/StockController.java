@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 /**
@@ -32,20 +30,36 @@ public class StockController {
      */
     private final StockService stockService;
     /**
-     * The logger service used for Observability  purposes
+     * The logger service used for Observability  purposes.
      */
     private static final Logger logger = LoggerFactory.getLogger(StockController.class);
 
+    /**
+     * Constructs a new StockController with the provided StockService.
+     *
+     * @param service the StockService to be used by the controller
+     */
     public StockController(final StockService service) {
         this.stockService = service;
     }
 
+    /**
+     * Retrieves all stocks.
+     *
+     * @return a list of all stocks
+     */
     @GetMapping
     public List<Stock> getAllStocks() {
         logger.info("Retrieving all stocks");
         return stockService.getAllStocks();
     }
 
+    /**
+     * Retrieves a stock by its ID.
+     *
+     * @param id the ID of the stock to retrieve
+     * @return the stock with the given ID
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getStockById(@PathVariable final String id) {
         logger.info("Retrieving stock with ID: {}", id);
@@ -54,6 +68,12 @@ public class StockController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Creates a new stock.
+     *
+     * @param data the data for the new stock
+     * @return the newly created stock
+     */
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestBody final RequestStockDTO data) {
         logger.info("Creating new stock");
@@ -61,6 +81,13 @@ public class StockController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 
+    /**
+     * Updates an existing stock.
+     *
+     * @param id           the ID of the stock to update
+     * @param updatedStock the updated information for the stock
+     * @return the updated stock, or 404 code if no stock with the given ID is found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateStock(@PathVariable final String id, @RequestBody final Stock updatedStock) {
         logger.info("Updating stock with ID: {}", id);
@@ -73,6 +100,12 @@ public class StockController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Deletes a stock by its ID.
+     *
+     * @param id the ID of the stock to delete
+     * @return a ResponseEntity indicating the success of the deletion operation or a 404 code if the ID was not found
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStockById(@PathVariable final String id) {
         logger.info("Deleting stock with ID: {}", id);
