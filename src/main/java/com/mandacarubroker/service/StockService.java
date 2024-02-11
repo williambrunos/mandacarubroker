@@ -52,10 +52,10 @@ public class StockService {
     /**
      * Constructs a new StockService with the given StockRepository.
      *
-     * @param stockRepository The repository for accessing stock data.
+     * @param stockRepo The repository for accessing stock data.
      */
-    public StockService(StockRepository stockRepository) {
-        this.stockRepository = stockRepository;
+    public StockService(final StockRepository stockRepo) {
+        this.stockRepository = stockRepo;
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             this.validator = factory.getValidator();
         }
@@ -77,7 +77,7 @@ public class StockService {
      * @param id The ID of the stock to retrieve.
      * @return An Optional containing the stock, or empty if not found.
      */
-    public Optional<Stock> getStockById(String id) {
+    public Optional<Stock> getStockById(final String id) {
         logger.info("Retrieving stock by ID: {}", id);
         return stockRepository.findById(id);
     }
@@ -88,7 +88,7 @@ public class StockService {
      * @param data The data for creating the new stock.
      * @return The newly created stock.
      */
-    public Stock createStock(RequestStockDTO data) {
+    public Stock createStock(final RequestStockDTO data) {
         logger.info("Creating new stock");
         validateRequestStockDTO(data);
         Stock newStock = new Stock(data);
@@ -101,7 +101,7 @@ public class StockService {
      * @param id           The ID of the stock to update.
      * @param updatedStock The updated data for the stock.
      */
-    public void updateStock(String id, Stock updatedStock) {
+    public void updateStock(final String id, final Stock updatedStock) {
         logger.info("Updating stock with ID: {}", id);
         stockRepository.findById(id)
                 .map(stock -> {
@@ -118,7 +118,7 @@ public class StockService {
      *
      * @param id The ID of the stock to delete.
      */
-    public void deleteStock(String id) {
+    public void deleteStock(final String id) {
         logger.info("Deleting stock with ID: {}", id);
         stockRepository.deleteById(id);
     }
@@ -129,7 +129,7 @@ public class StockService {
      * @param data The RequestStockDTO object to validate.
      * @throws ConstraintViolationException If validation fails.
      */
-    public void validateRequestStockDTO(RequestStockDTO data) {
+    public void validateRequestStockDTO(final RequestStockDTO data) {
         logger.info("Validating RequestStockDTO");
         Set<ConstraintViolation<RequestStockDTO>> violations = validator.validate(data);
         if (!violations.isEmpty()) {
@@ -148,7 +148,7 @@ public class StockService {
      *
      * @param data The RequestStockDTO object to validate and create a stock from.
      */
-    public void validateAndCreateStock(RequestStockDTO data) {
+    public void validateAndCreateStock(final RequestStockDTO data) {
         logger.info("Validating and creating new stock");
         validateRequestStockDTO(data);
         Stock newStock = new Stock(data);
