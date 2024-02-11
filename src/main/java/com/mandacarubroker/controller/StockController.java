@@ -1,5 +1,7 @@
 package com.mandacarubroker.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.domain.stock.RequestStockDTO;
 import com.mandacarubroker.service.StockService;
@@ -29,61 +31,41 @@ public class StockController {
      * The StockService used by this controller to perform operations on stocks.
      */
     private final StockService stockService;
-
     /**
-     * Constructs a new StockController with the provided StockService.
-     *
-     * @param service the StockService to be used by the controller
+     * The logger service used for Observability  purposes
      */
+    private static final Logger logger = LoggerFactory.getLogger(StockController.class);
+
     public StockController(final StockService service) {
         this.stockService = service;
     }
 
-    /**
-     * Retrieves all stocks.
-     *
-     * @return a list of all stocks
-     */
     @GetMapping
     public List<Stock> getAllStocks() {
+        logger.info("Retrieving all stocks");
         return stockService.getAllStocks();
     }
 
-    /**
-     * Retrieves a stock by its ID.
-     *
-     * @param id the ID of the stock to retrieve
-     * @return the stock with the given ID
-     * @throws ResponseStatusException if the stock with the given ID is not found
-     */
     @GetMapping("/{id}")
-    public Stock getStockById(@PathVariable final String id) {
+    public ResponseEntity<?> getStockById(@PathVariable final String id) {
+        logger.info("Retrieving stock with ID: {}", id);
         return stockService.getStockById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Stock not found"));
+                .map(stock -> ResponseEntity.ok().body(stock))
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Creates a new stock.
-     *
-     * @param data the data for the new stock
-     * @return the newly created stock
-     */
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestBody final RequestStockDTO data) {
+        logger.info("Creating new stock");
         Stock createdStock = stockService.createStock(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 
-    /**
-     * Updates an existing stock.
-     *
-     * @param id           the ID of the stock to update
-     * @param updatedStock the updated information for the stock
-     * @return the updated stock, or 404 code if no stock with the given ID is found
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateStock(@PathVariable final String id, @RequestBody final Stock updatedStock) {
+        logger.info("Updating stock with ID: {}", id);
         if (id == null || id.trim().isEmpty()) {
+            logger.error("Invalid ID provided for update operation");
             return ResponseEntity.badRequest().build();
         }
 
@@ -91,20 +73,15 @@ public class StockController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * Deletes a stock by its ID.
-     *
-     * @param id the ID of the stock to delete
-     * @return a ResponseEntity indicating the success of the deletion operation or a 404 code if the ID was not found
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStockById(@PathVariable final String id) {
+        logger.info("Deleting stock with ID: {}", id);
         if (id == null || id.trim().isEmpty()) {
+            logger.error("Invalid ID provided for deletion operation");
             return ResponseEntity.badRequest().build();
         }
 
         stockService.deleteStock(id);
         return ResponseEntity.ok().build();
     }
-
 }
