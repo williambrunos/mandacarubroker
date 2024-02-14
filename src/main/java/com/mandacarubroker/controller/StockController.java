@@ -76,6 +76,10 @@ public class StockController {
      */
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestBody final RequestStockDTO data) {
+        if (data.price() <= 0) {
+            logger.error("Invalid price provided for new stock creation");
+            return ResponseEntity.badRequest().build();
+        }
         logger.info("Creating new stock");
         Stock createdStock = stockService.createStock(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
@@ -89,15 +93,20 @@ public class StockController {
      * @return the updated stock, or 404 code if no stock with the given ID is found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateStock(@PathVariable final String id, @RequestBody final Stock updatedStock) {
+    public ResponseEntity<Stock> updateStock(@PathVariable final String id, @RequestBody final Stock updatedStock) {
         logger.info("Updating stock with ID: {}", id);
         if (id == null || id.trim().isEmpty()) {
             logger.error("Invalid ID provided for update operation");
             return ResponseEntity.badRequest().build();
         }
 
-        stockService.updateStock(id, updatedStock);
-        return ResponseEntity.ok().build();
+        if (!stockService.stockExists(id)) {
+            logger.error("Stock with ID {} not found for update", id);
+            return ResponseEntity.notFound().build();
+        }
+
+        Stock newStock = stockService.updateStock(id, updatedStock);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newStock);
     }
 
     /**
@@ -112,6 +121,11 @@ public class StockController {
         if (id == null || id.trim().isEmpty()) {
             logger.error("Invalid ID provided for deletion operation");
             return ResponseEntity.badRequest().build();
+        }
+
+        if (!stockService.stockExists(id)) {
+            logger.error("Stock with ID {} not found for deletion", id);
+            return ResponseEntity.notFound().build();
         }
 
         stockService.deleteStock(id);
