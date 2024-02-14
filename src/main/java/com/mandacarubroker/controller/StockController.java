@@ -49,7 +49,7 @@ public class StockController {
      * @param id the ID to check
      * @return true if the ID is valid, false otherwise
      */
-    private boolean isValidId(String id) {
+    private boolean isValidId(final String id) {
         return id != null && !id.trim().isEmpty();
     }
 
@@ -59,7 +59,7 @@ public class StockController {
      * @param id the ID of the stock
      * @return true if the stock exists, false otherwise
      */
-    private boolean stockExists(String id) {
+    private boolean stockExists(final String id) {
         return stockService.stockExists(id);
     }
 
