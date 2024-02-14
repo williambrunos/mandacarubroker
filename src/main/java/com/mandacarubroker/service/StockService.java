@@ -96,21 +96,34 @@ public class StockService {
     }
 
     /**
+     * Checks if a stock with certain ID exists.
+     *
+     * @param id The ID of the stock.
+     * @return wether there's a stock with the specified ID or not.
+     */
+    public boolean stockExists(String id) {
+        Optional<Stock> stock = stockRepository.findById(id);
+        return stock.isPresent();
+    }
+
+    /**
      * Updates an existing stock with the provided ID and data.
      *
      * @param id           The ID of the stock to update.
      * @param updatedStock The updated data for the stock.
+     * @return updatedStock
      */
-    public void updateStock(final String id, final Stock updatedStock) {
+    public Stock updateStock(final String id, final Stock updatedStock) {
         logger.info("Updating stock with ID: {}", id);
         stockRepository.findById(id)
                 .map(stock -> {
                     stock.setSymbol(updatedStock.getSymbol());
                     stock.setCompanyName(updatedStock.getCompanyName());
-                    double newPrice = stock.changePrice(updatedStock.getPrice(), true);
+                    double newPrice = updatedStock.getPrice();
                     stock.setPrice(newPrice);
                     return stockRepository.save(stock);
                 });
+        return updatedStock;
     }
 
     /**
