@@ -101,7 +101,7 @@ public class StockService {
      * @param id The ID of the stock.
      * @return wether there's a stock with the specified ID or not.
      */
-    public boolean stockExists(String id) {
+    public boolean stockExists(final String id) {
         Optional<Stock> stock = stockRepository.findById(id);
         return stock.isPresent();
     }
