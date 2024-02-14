@@ -44,6 +44,26 @@ public class StockController {
     }
 
     /**
+     * Checks if the ID is valid (not null or empty).
+     *
+     * @param id the ID to check
+     * @return true if the ID is valid, false otherwise
+     */
+    private boolean isValidId(String id) {
+        return id != null && !id.trim().isEmpty();
+    }
+
+    /**
+     * Checks if a stock with the given ID exists.
+     *
+     * @param id the ID of the stock
+     * @return true if the stock exists, false otherwise
+     */
+    private boolean stockExists(String id) {
+        return stockService.stockExists(id);
+    }
+
+    /**
      * Retrieves all stocks.
      *
      * @return a list of all stocks
@@ -95,12 +115,14 @@ public class StockController {
     @PutMapping("/{id}")
     public ResponseEntity<Stock> updateStock(@PathVariable final String id, @RequestBody final Stock updatedStock) {
         logger.info("Updating stock with ID: {}", id);
-        if (id == null || id.trim().isEmpty()) {
+        boolean stockIsNotValid = !isValidId(id);
+        if (stockIsNotValid) {
             logger.error("Invalid ID provided for update operation");
             return ResponseEntity.badRequest().build();
         }
 
-        if (!stockService.stockExists(id)) {
+        boolean stockDoesNotExists = !stockExists(id);
+        if (stockDoesNotExists) {
             logger.error("Stock with ID {} not found for update", id);
             return ResponseEntity.notFound().build();
         }
@@ -118,12 +140,14 @@ public class StockController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStockById(@PathVariable final String id) {
         logger.info("Deleting stock with ID: {}", id);
-        if (id == null || id.trim().isEmpty()) {
-            logger.error("Invalid ID provided for deletion operation");
+        boolean stockIsNotValid = !isValidId(id);
+        if (stockIsNotValid) {
+            logger.error("Invalid ID provided for delete operation");
             return ResponseEntity.badRequest().build();
         }
 
-        if (!stockService.stockExists(id)) {
+        boolean stockDoesNotExists = !stockExists(id);
+        if (stockDoesNotExists) {
             logger.error("Stock with ID {} not found for deletion", id);
             return ResponseEntity.notFound().build();
         }
