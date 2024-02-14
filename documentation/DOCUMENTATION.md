@@ -592,8 +592,84 @@ class StockControllerTests {
 ````
 ## Verificações check style
 
+Como é possível perceber pelos prints das execuções do checkstyle nas classes, todas as regras de linting
+e padronização de código estão sendo atendidas.
+
+### Checkstyle DTO
+
+![Checkstyle-DTO.PNG](images%2FCheckstyle-DTO.PNG)
+
+### Checkstyle Stock
+
+![Checkstyle-Stock.PNG](images%2FCheckstyle-Stock.PNG)
+
+### Checkstyle Stock Controller
+
+![Checkstyle-Stock-Controller.PNG](images%2FCheckstyle-Stock-Controller.PNG)
+
+### Checkstyle Stock Service
+
+![Checkstyle-Stock-Service.PNG](images%2FCheckstyle-Stock-Service.PNG)
+
 ## Testes unitários
+
+### Realização método get all stocks - GET
+
+Ao executarmos um método GET na rota ``/stocks`` sem nenhum ID, podemos observar como retorno
+uma lista com todas as ações do banco e um código HTTP 200 (OK):
+
+![Unity-Test-Get-All.png](images%2FUnity-Test-Get-All.png)
+
+### Realizando método get stock com ID - GET
+
+Ao executarmos um método GET na rota ``/stocks`` com um ID específico, podemos observar como retorno
+uma lista com a ação que possui o ID fornecido no banco e um código HTTP 200 (OK):
+
+![Unity-Test-Get-ID.png](images%2FUnity-Test-Get-ID.png)
+
+### Criação de ação via API - POST
+
+Aqui realizamos a criação de uma ação via método POST na API, podemos observar que o retorno da API
+consiste em um JSON com os dados criados no POST, e um código HTTP 201 (Created):
 
 ![Test-Successfull-Post-Correct- Stock-Price.png](./images/Test-Successfull-Post-Correct-Price.png)
 
+Em seguida, utilizamos o método GET para obter as informações desta ação recém criada
+na API, tendo um retorno similar àquele previamente citado:
+
 ![Test-Successfull-Post-Correct-Price.png](./images/Test-Successfull-Get-Correct-Stock-Price.png)
+
+### Atualização de ação via API - UPDATE
+
+Ao executarmos um método UPDATE ou PUT no endpoint de uma ação com ID específico, podemos perceber
+que a API permite a atualização dos dados, desde que os valores dos parâmetros respeitem todas as regras
+de validação estabelecidas na API. O retorno do método consiste nos dados atualizados e um código HTTP
+201 (Created):
+
+![Unity-Test-Update.png](images%2FUnity-Test-Update.png)
+
+Assim, se executarmos um GET naquele ID que acabamos de atualizar, podemos verificar que os dados foram atualizados com
+sucesso:
+
+![Unity-Test-Update-Get.png](images%2FUnity-Test-Update-Get.png)
+
+### Deletando ação via API - DELETE
+
+Se deletarmos uma ação pelo seu ID na API, não há retorno ao cliente e o código retornado é 200 (OK):
+
+![Unity-Test-Delete.png](images%2FUnity-Test-Delete.png)
+
+Agora, se tentarmos obter os dados da mesma ação deletada via GET, recebemos uma mensagem de erro e um código
+HTTP 404 (Not Found):
+
+![Unity-Test-Get-After-Delete.png](images%2FUnity-Test-Get-After-Delete.png)
+
+## Execução da suit de testes
+
+Utilizando dados mockados e a suit de testes previamente ilustrada, se obtem o seguinte
+resultado:
+
+![Test-Suit.PNG](images%2FTest-Suit.PNG)
+
+O único teste com falha foi o ``shouldDeleteStockById``, pois o ID utilizado no mock já foi deletado, como ilustrado
+anteriormente.
