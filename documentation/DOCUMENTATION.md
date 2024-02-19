@@ -673,3 +673,7 @@ resultado:
 
 O único teste com falha foi o ``shouldDeleteStockById``, pois o ID utilizado no mock já foi deletado, como ilustrado
 anteriormente.
+
+## Documentação da API
+
+A documentação da API foi escrita e está presente no próprio arquivo ``README.md`` do projeto.

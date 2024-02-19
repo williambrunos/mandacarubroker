@@ -1,92 +1,127 @@
-# MandaCaru Broker API
+# Documentação da API MandaCaru Broker
 
-## Descrição
-A Mandacaru Broker API é uma aplicação Spring Boot que fornece operações CRUD (Create, Read, Update, Delete) para gerenciar informações sobre ações (stocks).
+A API MandaCaru Broker fornece endpoints para gerenciar ações (stocks) em um sistema de corretagem de valores.
 
-## Recursos
+## Recursos Disponíveis
 
-### Listar Todas as Ações
-Retorna uma lista de todas as ações disponíveis.
+### Recurso: Stocks
 
-**Endpoint:**
-```http
-GET /stocks
-```
+Endpoints para operações CRUD em ações.
 
-### Obter uma Ação por ID
+#### 1. Listar todas as ações
 
-Retorna os detalhes de uma ação específica com base no ID.
+Retorna uma lista de todas as ações disponíveis no sistema.
 
-**Endpoint:**
-```http
+- **URL:**
+````bash
+GET /stocks 
+````
+
+- **Códigos de Resposta**
+  - 200 OK: Retorna a lista de ações com sucesso.
+
+#### 2. Obter uma ação por ID
+
+Retorna os detalhes de uma ação específica com base no seu ID.
+
+- **URL**
+
+```bash
 GET /stocks/{id}
 ```
+- **Parâmetros de Caminho (Path Parameters)**
+  - `id` (string): O ID único da ação a ser recuperada.
+    - O parâmetro `id` deve ser aquele gerado automaticamente pelo sistema ao criar uma ação.
 
-### Criar uma Nova Ação
-Cria uma nova ação com base nos dados fornecidos.
+- **Códigos de Resposta**
+  - 200 OK: A ação foi encontrada e detalhes são retornados.
+  - 404 Not Found: A ação com o ID fornecido não foi encontrada.
 
-**Endpoint:**
-```http
-POST /stocks
-```
-**Corpo da Solicitação (Request Body):**
+#### 3. Criar uma nova ação
 
-```JSON
-{
-  "symbol": "BBAS3",
-  "companyName": "Banco do Brasil SA",
-  "price": 56.97
-}
+Cria uma nova ação com os dados fornecidos.
 
-```
-### Atualizar uma Ação por ID
-Atualiza os detalhes de uma ação específica com base no ID.
+- **URL**
+````bash
+POST /stocks 
+````
 
-**Endpoint:**
-```http
+- **Corpo da Requisição (Request Body)**
+  - `name` (string, obrigatório): O nome da ação.
+    - O nome da ação deve respeitar aos padrões de nomenclatura de ativos da B3.
+  - `price` (double, obrigatório): O preço da ação.
+    - O valor do preço da ação deve ser um número real não negativo.
+
+- **Códigos de Resposta**
+  - 201 Created: A ação foi criada com sucesso.
+  - 400 Bad Request: Os dados da requisição são inválidos.
+
+#### 4. Atualizar uma ação existente
+
+Atualiza os detalhes de uma ação existente com base no seu ID.
+
+- **URL**
+
+````bash
 PUT /stocks/{id}
-```
-**Corpo da Solicitação (Request Body):**
+````
 
-```JSON
-{
-  "symbol": "BBAS3",
-  "companyName": "Banco do Brasil SA",
-  "price": 59.97
-}
+- **Parâmetros de Caminho (Path Parameters)**
+  - `id` (string): O ID único da ação a ser atualizada.
+    - O parâmetro `id` deve ser aquele gerado automaticamente pelo sistema ao criar uma ação.
 
-```
 
-### Excluir uma Ação por ID
-Exclui uma ação específica com base no ID.
+- **Corpo da Requisição (Request Body)**
+  - `name` (string, opcional): O novo nome da ação.
+    - O nome da ação deve respeitar aos padrões de nomenclatura de ativos da B3.
+  - `price` (double, opcional): O novo preço da ação.
+    - O valor do preço da ação deve ser um número real não negativo.
 
-**Endpoint:**
-```http
+- **Códigos de Resposta**
+  - 201 Created: A ação foi atualizada com sucesso.
+  - 400 Bad Request: Os dados da requisição são inválidos.
+  - 404 Not Found: A ação com o ID fornecido não foi encontrada.
+
+#### 5. Excluir uma ação existente
+
+Exclui uma ação existente com base no seu ID.
+
+- **URL**
+
+````bash
 DELETE /stocks/{id}
-```
+````
 
+- **Parâmetros de Caminho (Path Parameters)**
+  - `id` (string): O ID único da ação a ser excluída.
+    - O parâmetro `id` deve ser aquele gerado automaticamente pelo sistema ao criar uma ação.
 
-## Uso
-1. Clone o repositório: `git clone https://github.com/seu-usuario/MandaCaruBrokerAPI.git`
-2. Importe o projeto em sua IDE preferida.
-3. Configure o banco de dados e as propriedades de aplicação conforme necessário.
-4. Execute o aplicativo Spring Boot.
-5. Acesse a API em `http://localhost:8080`.
+- **Códigos de Resposta**
+  - 200 OK: A ação foi excluída com sucesso.
+  - 404 Not Found: A ação com o ID fornecido não foi encontrada.
 
-## Requisitos
-- Java 11 ou superior
-- Maven
-- Banco de dados
+## Como executar a aplicação localmente
 
-## Tecnologias Utilizadas
-- Spring Boot
-- Spring Data JPA
-- Maven
-- PostgreSQL
+### 1. Realize um clone do projeto
 
-## Contribuições
-Contribuições são bem-vindas!
+Em sua pasta local, realize um clone do projeto utilizando o comando abaixo:
 
-## Licença
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
+````bash
+git clone https://github.com/williambrunos/mandacarubroker.git
+cd mandacarubroker
+````
+
+### 2. Crie e execute a instância docker com PostgreSQL
+
+Crie e execute a instância docker com o banco de dados postgres com o comando abaixo na raiz do projeto:
+
+````bash
+docker compose up -d
+````
+
+Aguarde a criação da instância docker.
+
+### 3. Execute a aplicação com SpringBoot
+
+Execute a aplicação do broker no arquivo ``MandacarubrokerApplication.java``
 
