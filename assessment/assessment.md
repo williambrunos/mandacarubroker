@@ -2,7 +2,7 @@
 
 ## Índice
 
-- .giignore
+- .gitignore
 - Checkstyle
 - Docker compose
 - POM
