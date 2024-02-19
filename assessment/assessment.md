@@ -1,5 +1,36 @@
 # Relatório qualidade de software - Desafio 1 Módulo Jandaia
 
+## Índice
+
+- .giignore
+- Checkstyle
+- Docker compose
+- POM
+- Stock Controller
+  - Importações do Stock Controller
+  - Modificações gerais
+  - Modificações do código do Stock Controller
+- RequestStockDTO
+- Stock
+  - Modificações gerais no Stock
+  - Modificações específicas no Stock
+- Stock Service
+  - Modificações gerais no Stock Service
+  - Modificações específicas no Stock Service
+- Suit de testes automatizada
+- Verificações check style
+- Testes unitários
+
+## Repositório contendo os códigos
+
+Repositório geral:
+
+[mandacaru broker](https://github.com/williambrunos/mandacarubroker)
+
+Arquivo deste assessment de qualidade:
+
+[assessment](https://github.com/williambrunos/mandacarubroker/blob/main/assessment/assessment.md)
+
 ## .gitignore
 
 * Caminho do arquivo: .gitignore
@@ -429,7 +460,7 @@ de dados, método este utilizado em outras verificações do controller previame
 
 * Caminho do arquivo: **src/test/java/com/mandacarubroker/MandacarubrokerApplicationTests.java**
 
-Além disso, para facilitar o desenvolvimento e homologação das modificações previamente descritas,
+Além disso, seguindo a metodologia TDD e também para facilitar o desenvolvimento e homologação das modificações previamente descritas,
 realizei a construção de uma suit de testes para a aplicação, realizando a verificação de diversos cenários
 de testes unitários.
 
